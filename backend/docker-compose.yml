@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: jstack-live049
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+    volumes:
+      - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
