@@ -33,10 +33,19 @@
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-sonarjs": "^3.0.2",
-    "husky": "^9.1.7",
+    "husky": "^9.1.6",
     "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings=0",
+      "prettier --write"
+    ],
+    "**/*.{html,json,css,scss,md,mdx}": [
+      "prettier -w"
+    ]
   }
 }
