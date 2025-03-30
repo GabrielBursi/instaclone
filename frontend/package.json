@@ -1,0 +1,42 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint --ext .tsx --ext .ts src/",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier:write": "npx prettier --write **/*.{ts,tsx,json}",
+    "prettier:format": "prettier --check ./src",
+    "format": "npm run prettier:write && npm run lint:fix",
+    "prepare": "husky",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "15.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@tanstack/eslint-plugin-query": "^5.68.0",
+    "@types/eslint-plugin-jsx-a11y": "^6.10.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.2.4",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-sonarjs": "^3.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
