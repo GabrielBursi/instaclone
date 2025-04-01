@@ -6,6 +6,7 @@ import { FollowUserController, GetFollowersController, GetFollowingController, U
 import { GetPostLikesController, LikePostController, UnlikePostController } from './controllers/likes';
 
 const app = fastify()
+app.register(require('@fastify/cors'))
 
 app.post('/users', CreateUserController.handler);
 app.get('/users/:id', GetUserController.handler);
