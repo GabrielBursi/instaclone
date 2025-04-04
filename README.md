@@ -23,7 +23,7 @@ Este projeto foi desenvolvido com base nos seguintes conteúdos do curso **JStac
 
 - **Next.js** (React + SSR/ISR)
 - **React Query** para gerenciamento de estado assíncrono
-- Styled-components/Tailwind CSS para estilização
+- Tailwind CSS e shadcn/ui para estilização
 
 ## Funcionalidades Implementadas
 
