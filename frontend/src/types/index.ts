@@ -1,4 +1,5 @@
 export interface MetaPagination {
+	next_cursor: number,
 	total: number
 	page: number
 	per_page: number

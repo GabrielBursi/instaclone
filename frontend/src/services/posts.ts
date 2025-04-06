@@ -1,7 +1,7 @@
 import { CreatePostPayload, CursorPaginationParams, PaginatedResponde, Post, ReturnService } from "@/types"
 import { Api } from "./config"
 
-const GetAll = async (queryParams?: CursorPaginationParams & { user_id: string }): ReturnService<PaginatedResponde<Post>> => {
+const GetAll = async (queryParams?: CursorPaginationParams & { user_id?: string }): ReturnService<PaginatedResponde<Post>> => {
 	try {
 		const { data } = await Api<PaginatedResponde<Post>>('/posts', { params: queryParams })
 		return data

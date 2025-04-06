@@ -1,82 +1,41 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
-import { Post, SafeType } from "@/types";
-import { uniqueId } from "lodash";
-import { faker } from '@faker-js/faker';
 import Link from "next/link";
+import { useEffect } from "react";
+import { useUser } from "@/hooks/useUser";
+import { usePosts } from "@/hooks/usePosts";
+import { useLikes } from "@/hooks/useLikes";
+import { useFollowing } from "@/hooks/useFollowing";
+import { faker } from "@faker-js/faker";
 
-const posts: SafeType<Post>[] = [
-	{
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 500, width: 500 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 500, width: 500 })
-	},
-	{
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 500, width: 500 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 500, width: 500 })
-	},
-	{
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 500, width: 500 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 500, width: 500 })
-	},
-	{
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 500, width: 500 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 500, width: 500 })
-	},
-	{
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 500, width: 500 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 500, width: 500 })
-	},
-	{
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 500, width: 500 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 500, width: 500 })
-	},
-];
 
 export default function Home() {
+
+	const { user } = useUser('1')
+	const { posts, postsMeta } = usePosts()
+	const { posts: postsByUserId, postsMeta: postsMetaByUserId } = usePosts('1')
+	const { likes } = useLikes(1)
+	const { followers, following } = useFollowing(1)
+
+	useEffect(() => {
+		console.log(
+			{
+				user,
+				posts,
+				postsByUserId,
+				postsMeta,
+				postsMetaByUserId,
+				likes,
+				followers,
+				following,
+			}
+		)
+	}, [followers, following, likes, posts, postsByUserId, postsMeta, postsMetaByUserId, user]);
+
 	return (
 		<main className="max-w-xl mx-auto py-4 px-4 sm:px-0">
 			<div className="flex gap-4 overflow-x-auto pb-4 mb-4">
@@ -96,15 +55,15 @@ export default function Home() {
 			</div>
 
 			<div className="space-y-6">
-				{posts.map((post) => post.image_url ? (
+				{posts.map((post) => (
 					<div key={post.id} className="border rounded-md overflow-hidden bg-white">
 						<div className="flex items-center justify-between p-3">
 							<div className="flex items-center space-x-3">
 								<Link href={`/profile/${post.user_id}`}>
-								<Avatar>
-									<AvatarImage src={post.avatar_url ?? undefined} />
-									<AvatarFallback>{post?.name?.[0] ?? 'U'}</AvatarFallback>
-								</Avatar>
+									<Avatar>
+										<AvatarImage src={post.avatar_url ?? undefined} />
+										<AvatarFallback>{post?.name?.[0] ?? 'U'}</AvatarFallback>
+									</Avatar>
 								</Link>
 								<div>
 									<p className="font-medium text-sm">{post.username}</p>
@@ -117,7 +76,7 @@ export default function Home() {
 
 						<div className="relative aspect-square w-full bg-gray-100">
 							<Image
-								src={post.image_url}
+								src={post.image_url ?? faker.image.url()}
 								alt={`Post by ${post.username}`}
 								className="object-cover w-full h-full"
 								width={500}
@@ -144,7 +103,7 @@ export default function Home() {
 							</p>
 						</div>
 					</div>
-				): null)}
+				))}
 			</div>
 		</main>
 	);
