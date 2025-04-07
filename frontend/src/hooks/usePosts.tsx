@@ -10,7 +10,16 @@ type OldPosts = InfiniteData<SafeType<PaginatedResponde<Post>>>
 export function usePosts(userId?: string) {
 	const queryClient = useQueryClient();
 
-	const { data: postsData, isLoading: isLoadingPosts, error: errorPosts, isError: isErrorPosts, hasNextPage: hasNextPosts, hasPreviousPage: hasPreviousPosts } = useInfiniteQuery({
+	const {
+		data: postsData,
+		isLoading: isLoadingPosts,
+		error: errorPosts,
+		isError: isErrorPosts,
+		hasNextPage: hasNextPosts,
+		hasPreviousPage: hasPreviousPosts,
+		fetchNextPage: fetchNextPosts,
+		isFetching: isFetchingPosts
+	} = useInfiniteQuery({
 		queryKey: ["posts", userId],
 		queryFn: ({ pageParam }) => {
 			return PostServices.GetAll({
@@ -131,7 +140,9 @@ export function usePosts(userId?: string) {
 
 	return {
 		posts,
+		fetchNextPosts,
 		isLoadingPosts,
+		isFetchingPosts,
 		hasNextPosts,
 		hasPreviousPosts,
 		postsMeta,

@@ -190,7 +190,7 @@ DECLARE
   i INTEGER;
 BEGIN
   FOR user_id_var IN 1..5 LOOP
-    FOR i IN 1..20 LOOP
+    FOR i IN 1..100 LOOP
       INSERT INTO posts(user_id, caption)
       VALUES (
         user_id_var,
