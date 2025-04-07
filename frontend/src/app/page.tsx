@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PostFeed } from "@/components/PostFeed";
+import { CreatePostModal } from "@/components/CreatePostModal";
 
 export default function Home() {
 
@@ -19,6 +20,9 @@ export default function Home() {
 						<span className="text-xs mt-1 truncate w-16 text-center">user_{i}</span>
 					</div>
 				))}
+			</div>
+			<div className="mb-8">
+				<CreatePostModal />
 			</div>
 			<PostFeed />
 		</main>
