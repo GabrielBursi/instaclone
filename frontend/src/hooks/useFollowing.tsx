@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { FollowerServices } from '@/services/followers'
 import { SafeType, User } from '@/types'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 type OldUser = SafeType<User>
 
@@ -58,10 +58,17 @@ export function useFollowing(userId?: number) {
 			await queryClient.cancelQueries({
 				queryKey: ['user', variables.following_id],
 			})
+			await queryClient.cancelQueries({
+				queryKey: ['user', variables.follower_id],
+			})
 
-			const previousUserData = queryClient.getQueryData([
+			const previousFollowingUserData = queryClient.getQueryData([
 				'user',
 				variables.following_id,
+			])
+			const previousFollowerUserData = queryClient.getQueryData([
+				'user',
+				variables.follower_id,
 			])
 
 			queryClient.setQueryData(
@@ -86,19 +93,26 @@ export function useFollowing(userId?: number) {
 				}
 			)
 
-			return { previousUserData, targetUserId: variables.following_id }
+			return { previousFollowingUserData, previousFollowerUserData }
 		},
-		onError: (_err, _variables, context) => {
-			if (context?.targetUserId && context.previousUserData) {
-				queryClient.setQueryData(
-					['user', context.targetUserId],
-					context.previousUserData
-				)
-			}
+		onError: async (_err, variables, context) => {
+			await queryClient.cancelQueries({
+				queryKey: ['user', variables.following_id],
+			})
+			await queryClient.cancelQueries({
+				queryKey: ['user', variables.follower_id],
+			})
+			queryClient.setQueryData(
+				['user', variables.following_id],
+				context?.previousFollowingUserData
+			)
+			queryClient.setQueryData(
+				['user', variables.follower_id],
+				context?.previousFollowerUserData
+			)
 		},
 		onSettled: async (_data, _err, variables) => {
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ['user', userId] }),
 				queryClient.invalidateQueries({
 					queryKey: ['user', variables.following_id],
 				}),
@@ -126,9 +140,13 @@ export function useFollowing(userId?: number) {
 				queryKey: ['user', variables.following_id],
 			})
 
-			const previousUserData = queryClient.getQueryData([
+			const previousFollowingUserData = queryClient.getQueryData([
 				'user',
 				variables.following_id,
+			])
+			const previousFollowerUserData = queryClient.getQueryData([
+				'user',
+				variables.follower_id,
 			])
 
 			queryClient.setQueryData(
@@ -153,15 +171,23 @@ export function useFollowing(userId?: number) {
 				}
 			)
 
-			return { previousUserData, targetUserId: variables.following_id }
+			return { previousFollowingUserData, previousFollowerUserData }
 		},
-		onError: (_err, _variables, context) => {
-			if (context?.targetUserId && context.previousUserData) {
-				queryClient.setQueryData(
-					['user', context.targetUserId],
-					context.previousUserData
-				)
-			}
+		onError: async (_err, variables, context) => {
+			await queryClient.cancelQueries({
+				queryKey: ['user', variables.following_id],
+			})
+			await queryClient.cancelQueries({
+				queryKey: ['user', variables.follower_id],
+			})
+			queryClient.setQueryData(
+				['user', variables.following_id],
+				context?.previousFollowingUserData
+			)
+			queryClient.setQueryData(
+				['user', variables.follower_id],
+				context?.previousFollowerUserData
+			)
 		},
 		onSettled: async (_data, _err, variables) => {
 			await Promise.all([
@@ -182,6 +208,11 @@ export function useFollowing(userId?: number) {
 		},
 	})
 
+	const isUserFollowingOther = useCallback((otherId: number) => {
+		const isFollowing = following.some(user => user?.id === otherId)
+		return isFollowing
+	}, [following])
+
 	return {
 		followers,
 		following,
@@ -194,5 +225,6 @@ export function useFollowing(userId?: number) {
 		isUnfollowingUser,
 		followError,
 		unfollowError,
+		isUserFollowingOther,
 	} as const
 }

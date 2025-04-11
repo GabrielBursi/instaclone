@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query'
 import { LikeServices } from '@/services/likes'
 import { Like, PaginatedResponde, Post, SafeType } from '@/types'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 type OldPosts = InfiniteData<SafeType<PaginatedResponde<Post>>>
 
@@ -36,7 +36,7 @@ export function useLikes(postId?: number) {
 			const previousPosts = queryClient.getQueryData(['posts'])
 
 			queryClient.setQueriesData(
-				{ queryKey: ['posts'] },
+				{ queryKey: ['posts'], exact: false },
 				(oldData: OldPosts) => {
 					if (!oldData?.pages) return oldData
 
@@ -60,33 +60,16 @@ export function useLikes(postId?: number) {
 
 			return { previousPosts, postId: variables.post_id }
 		},
-		onError: (_err, _variables, context) => {
+		onError: async (_err, _variables, context) => {
+			await queryClient.cancelQueries({ queryKey: ['posts'] })
 			queryClient.setQueriesData(
 				{ queryKey: ['posts'] },
-				(oldData: OldPosts) => {
-					if (!oldData?.pages) return oldData
-
-					return {
-						...oldData,
-						pages: oldData.pages.map((page) => ({
-							...page,
-							data: page?.data?.map((post) => {
-								if (post?.id === context?.postId) {
-									return {
-										...post,
-										likes_count: (post?.likes_count ?? 1) - 1,
-									}
-								}
-								return post
-							}),
-						})),
-					}
-				}
+				() => context?.previousPosts
 			)
 		},
 		onSettled: async () => {
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ['posts'] }),
+				queryClient.invalidateQueries({ queryKey: ['posts'], exact: false }),
 				queryClient.invalidateQueries({ queryKey: ['likes', postId] }),
 			])
 		},
@@ -107,6 +90,8 @@ export function useLikes(postId?: number) {
 		}
 	}, [likesData, isErrorLikes, errorLikes])
 
+	const isLiked = useMemo(() => likesList.some(l => l.user_id === 1), [likesList])
+
 	return {
 		likes: likesList,
 		isLoadingLikes,
@@ -114,5 +99,6 @@ export function useLikes(postId?: number) {
 		likePost,
 		isLikingPost,
 		likePostError: !!likePostError,
+		isLiked,
 	} as const
 }

@@ -14,7 +14,7 @@ import {
 } from 'react-virtualized'
 import { RenderedRows } from 'react-virtualized/dist/es/List'
 
-export function PostFeed({ userId }: Readonly<{ userId?: string }>) {
+export function PostFeed({ userId }: Readonly<{ userId?: number }>) {
 	const { posts, isLoadingPosts, fetchNextPosts, isFetchingPosts, postsMeta } =
 		usePosts(userId)
 

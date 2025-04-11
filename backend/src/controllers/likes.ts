@@ -146,7 +146,7 @@ export class GetPostLikesController {
 			}
 
 			const { rows: likes } = await query(`
-        SELECT u.*, us.posts_count, us.followers_count, us.following_count
+        SELECT u.*, us.posts_count, us.followers_count, us.following_count, us.user_id
         FROM likes l
         JOIN users u ON l.user_id = u.id
         JOIN user_stats us ON u.id = us.user_id

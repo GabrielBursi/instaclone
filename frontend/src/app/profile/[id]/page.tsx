@@ -7,24 +7,25 @@ import { GridIcon, BookmarkIcon, Heart } from 'lucide-react'
 import { useUser } from '@/hooks/useUser'
 import { usePosts } from '@/hooks/usePosts'
 import { useFollowing } from '@/hooks/useFollowing'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { faker } from '@faker-js/faker'
 
 export default function ProfilePage() {
 	const params = useParams()
 	const userId = typeof params.id === 'string' ? params.id : ''
-	const { user, isLoading: userLoading } = useUser(userId)
-	const { posts } = usePosts(userId)
+	const { user, isLoading: userLoading } = useUser(Number(userId))
+	const { posts } = usePosts(Number(userId))
 	const [currentUser] = useState({ id: 1 })
-	const { followUser, unfollowUser, isUnfollowingUser, isFollowingUser } =
+	const { followUser, unfollowUser, isUnfollowingUser, isFollowingUser, isUserFollowingOther } =
 		useFollowing(currentUser.id)
-	const [isFollowing, setIsFollowing] = useState(false)
+
+	const currentUserIsFollowing = useMemo(() => isUserFollowingOther(Number(params.id)), [isUserFollowingOther, params])
 
 	const handleFollowToggle = () => {
 		if (!user?.id) return
 
-		if (isFollowing) {
+		if (currentUserIsFollowing) {
 			unfollowUser({
 				follower_id: currentUser.id,
 				following_id: parseFloat(userId),
@@ -36,7 +37,6 @@ export default function ProfilePage() {
 			})
 		}
 
-		setIsFollowing(!isFollowing)
 	}
 
 	if (userLoading || !user) {
@@ -60,12 +60,12 @@ export default function ProfilePage() {
 						<h1 className="text-xl font-semibold">{user.username}</h1>
 						{user.id !== currentUser.id ? (
 							<Button
-								variant={isFollowing ? 'outline' : 'default'}
+								variant={currentUserIsFollowing ? 'outline' : 'default'}
 								size="sm"
 								onClick={handleFollowToggle}
 								disabled={isFollowingUser || isUnfollowingUser}
 							>
-								{isFollowing ? 'Unfollow' : 'Follow'}
+								{currentUserIsFollowing ? 'Unfollow' : 'Follow'}
 							</Button>
 						) : (
 							<Button variant="outline" size="sm">

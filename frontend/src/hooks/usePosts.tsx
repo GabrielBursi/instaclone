@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 
 type OldPosts = InfiniteData<SafeType<PaginatedResponde<Post>>>
 
-export function usePosts(userId?: string) {
+export function usePosts(userId?: number) {
 	const queryClient = useQueryClient()
 
 	usePrefetchInfiniteQuery({
@@ -22,7 +22,7 @@ export function usePosts(userId?: string) {
 			return PostServices.GetAll({
 				cursor: pageParam,
 				limit: '10',
-				...(userId ? { user_id: userId } : {}),
+				...(userId ? { user_id: userId.toString() } : {}),
 			})
 		},
 		getNextPageParam: (lastPage) => {
@@ -53,7 +53,7 @@ export function usePosts(userId?: string) {
 			return PostServices.GetAll({
 				cursor: pageParam,
 				limit: '10',
-				...(userId ? { user_id: userId } : {}),
+				...(userId ? { user_id: userId.toString() } : {}),
 			})
 		},
 		getNextPageParam: (lastPage) => {

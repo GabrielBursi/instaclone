@@ -3,7 +3,7 @@ import { SafeType, User } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
-export function useUser(userId?: string) {
+export function useUser(userId?: number) {
 	const {
 		data,
 		isLoading,
@@ -11,7 +11,7 @@ export function useUser(userId?: string) {
 		error: errorRq,
 	} = useQuery({
 		queryKey: ['user', userId],
-		queryFn: () => UserServices.GetById(userId!),
+		queryFn: () => UserServices.GetById(userId!.toString()),
 		enabled: !!userId,
 	})
 

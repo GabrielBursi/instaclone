@@ -1,4 +1,4 @@
-import { Ref, useState } from 'react'
+import { Ref, useEffect, useState } from 'react'
 import { Post, SafeType } from '@/types'
 import { useLikes } from '@/hooks/useLikes'
 import { Button } from '@/components/ui/button'
@@ -22,7 +22,7 @@ interface PostCardProps {
 }
 
 export const PostCard = ({ post, onDelete, ref }: PostCardProps) => {
-	const { likePost, isLikingPost } = useLikes()
+	const { likePost, isLikingPost, isLiked } = useLikes(post.id!)
 	const [currentUser] = useState({ id: 1 })
 
 	const handleLike = () => {
@@ -82,7 +82,7 @@ export const PostCard = ({ post, onDelete, ref }: PostCardProps) => {
 						size="icon"
 						className={isLikingPost ? 'opacity-50' : ''}
 						onClick={handleLike}
-						disabled={isLikingPost}
+						disabled={isLikingPost || isLiked}
 					>
 						<Heart
 							className={`h-6 w-6 ${post.likes_count && post.likes_count > 0 ? 'fill-red-500 text-red-500' : ''}`}

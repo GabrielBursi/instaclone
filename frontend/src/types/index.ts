@@ -44,6 +44,7 @@ export interface Like {
 	posts_count: number
 	followers_count: number
 	following_count: number
+	user_id?: number
 }
 
 export interface Follower {
