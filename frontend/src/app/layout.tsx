@@ -18,9 +18,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: 'InstaClone',
-	description: 'Este é um projeto fullstack desenvolvido com Node.js no backend e Next.js no frontend, com o objetivo de praticar conceitos fundamentais abordados no curso JStack. O foco principal está em paginação, infinite scroll e optimistic updates utilizando React Query.',
+	description:
+		'Este é um projeto fullstack desenvolvido com Node.js no backend e Next.js no frontend, com o objetivo de praticar conceitos fundamentais abordados no curso JStack. O foco principal está em paginação, infinite scroll e optimistic updates utilizando React Query.',
 }
-
 
 export default function RootLayout({
 	children,
@@ -31,10 +31,10 @@ export default function RootLayout({
 
 	return (
 		<html lang="en">
-			<Navbar />
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased mt-20`}
 			>
+				<Navbar />
 				<Provider>
 					<HydrationBoundary state={dehydrate(qc)}>
 						{children}

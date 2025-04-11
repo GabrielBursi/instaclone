@@ -1,9 +1,19 @@
-import { CreateUserPayload, CursorPaginationParams, PaginatedResponde, ReturnService, User } from "@/types";
-import { Api } from "./config";
+import {
+	CreateUserPayload,
+	CursorPaginationParams,
+	PaginatedResponde,
+	ReturnService,
+	User,
+} from '@/types'
+import { Api } from './config'
 
-const GetAll = async (queryParams?: CursorPaginationParams & { search?: string }): ReturnService<PaginatedResponde<User>> => {
+const GetAll = async (
+	queryParams?: CursorPaginationParams & { search?: string }
+): ReturnService<PaginatedResponde<User>> => {
 	try {
-		const { data } = await Api<PaginatedResponde<User>>('/users', { params: queryParams })
+		const { data } = await Api<PaginatedResponde<User>>('/users', {
+			params: queryParams,
+		})
 		return data
 	} catch {
 		return new Error()

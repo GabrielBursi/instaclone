@@ -1,9 +1,11 @@
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Home, Search, PlusSquare, Heart } from "lucide-react";
-import { faker } from "@faker-js/faker";
+'use client'
+
+import Link from 'next/link'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Home, Search, PlusSquare, Heart } from 'lucide-react'
+import { faker } from '@faker-js/faker'
 
 export function Navbar() {
 	return (
@@ -46,5 +48,5 @@ export function Navbar() {
 				</nav>
 			</div>
 		</header>
-	);
+	)
 }

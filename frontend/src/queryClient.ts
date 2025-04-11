@@ -1,7 +1,6 @@
-import { isServer, QueryClient } from "@tanstack/react-query";
+import { isServer, QueryClient } from '@tanstack/react-query'
 
 export const makeQueryClient = () => {
-
 	const queryClient = new QueryClient({
 		defaultOptions: {
 			queries: {
@@ -9,13 +8,12 @@ export const makeQueryClient = () => {
 				refetchOnWindowFocus: false,
 			},
 		},
-	});
+	})
 
 	return queryClient
 }
 
 let browserQueryClient: QueryClient | null = null
-
 
 export const getQueryClient = () => {
 	if (isServer) return makeQueryClient()

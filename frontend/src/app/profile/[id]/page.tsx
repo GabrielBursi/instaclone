@@ -1,53 +1,77 @@
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GridIcon, BookmarkIcon, Heart } from "lucide-react";
-import Image from "next/image";
-import { uniqueId } from "lodash";
-import { Post, SafeType, User } from "@/types";
-import { faker } from '@faker-js/faker';
-
-const user: SafeType<User> = {
-	id: Number(uniqueId),
-	username: faker.internet.username(),
-	name: faker.person.fullName(),
-	bio: faker.lorem.sentence(),
-	avatar_url: faker.image.url(),
-	created_at: faker.date.past().toISOString(),
-	email: faker.internet.email(),
-	followers_count: faker.number.int({ min: 100, max: 5000 }),
-	following_count: faker.number.int({ min: 100, max: 5000 }),
-	posts_count: faker.number.int({ min: 100, max: 5000 }),
-};
-
-const posts: SafeType<Post>[] = Array.from({ length: 9 }, () => ({
-		id: Number(uniqueId()),
-		user_id: Number(uniqueId()),
-		caption: faker.lorem.sentence(),
-		image_url: faker.image.url({ height: 200, width: 200 }),
-		likes_count: faker.number.int({ min: 100, max: 5000 }),
-		published_at: faker.date.past().toISOString(),
-		username: faker.internet.username(),
-		name: faker.person.fullName(),
-		avatar_url: faker.image.url({ height: 200, width: 200 })
-}));
+'use client'
+import { useParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { GridIcon, BookmarkIcon, Heart } from 'lucide-react'
+import { useUser } from '@/hooks/useUser'
+import { usePosts } from '@/hooks/usePosts'
+import { useFollowing } from '@/hooks/useFollowing'
+import { useState } from 'react'
+import Image from 'next/image'
+import { faker } from '@faker-js/faker'
 
 export default function ProfilePage() {
+	const params = useParams()
+	const userId = typeof params.id === 'string' ? params.id : ''
+	const { user, isLoading: userLoading } = useUser(userId)
+	const { posts } = usePosts(userId)
+	const [currentUser] = useState({ id: 1 })
+	const { followUser, unfollowUser, isUnfollowingUser, isFollowingUser } =
+		useFollowing(currentUser.id)
+	const [isFollowing, setIsFollowing] = useState(false)
 
+	const handleFollowToggle = () => {
+		if (!user?.id) return
 
+		if (isFollowing) {
+			unfollowUser({
+				follower_id: currentUser.id,
+				following_id: parseFloat(userId),
+			})
+		} else {
+			followUser({
+				follower_id: currentUser.id,
+				following_id: parseFloat(userId),
+			})
+		}
+
+		setIsFollowing(!isFollowing)
+	}
+
+	if (userLoading || !user) {
+		return (
+			<div className="flex justify-center items-center h-screen">
+				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+			</div>
+		)
+	}
 
 	return (
 		<div className="max-w-4xl mx-auto py-8 px-4">
 			<div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 mb-8">
 				<Avatar className="w-20 h-20 sm:w-32 sm:h-32">
 					<AvatarImage src={user.avatar_url ?? undefined} />
-					<AvatarFallback>{user?.name?.[0] ?? 'U'}</AvatarFallback>
+					<AvatarFallback>{user.name?.[0] ?? 'U'}</AvatarFallback>
 				</Avatar>
 
 				<div className="flex-1 text-center sm:text-left">
 					<div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
 						<h1 className="text-xl font-semibold">{user.username}</h1>
-						<Button variant="outline" size="sm">Edit Profile</Button>
+						{user.id !== currentUser.id ? (
+							<Button
+								variant={isFollowing ? 'outline' : 'default'}
+								size="sm"
+								onClick={handleFollowToggle}
+								disabled={isFollowingUser || isUnfollowingUser}
+							>
+								{isFollowing ? 'Unfollow' : 'Follow'}
+							</Button>
+						) : (
+							<Button variant="outline" size="sm">
+								Edit Profile
+							</Button>
+						)}
 					</div>
 
 					<div className="flex justify-center sm:justify-start gap-8 mb-4">
@@ -86,14 +110,14 @@ export default function ProfilePage() {
 
 				<TabsContent value="posts" className="mt-6">
 					<div className="grid grid-cols-3 gap-1">
-						{posts.map((post) => post.image_url ? (
+						{posts.map((post) => (
 							<div key={post.id} className="aspect-square relative group">
 								<Image
-									src={post.image_url}
+									src={post.image_url ?? faker.image.url()}
 									alt={`Post ${post.id}`}
 									className="object-cover w-full h-full"
-									width={200}
-									height={200}
+									width={100}
+									height={100}
 								/>
 								<div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity">
 									<div className="flex items-center gap-2">
@@ -102,7 +126,7 @@ export default function ProfilePage() {
 									</div>
 								</div>
 							</div>
-						): null)}
+						))}
 					</div>
 				</TabsContent>
 
@@ -113,5 +137,5 @@ export default function ProfilePage() {
 				</TabsContent>
 			</Tabs>
 		</div>
-	);
+	)
 }

@@ -1,7 +1,16 @@
-import { Follower, FollowPayload, PaginatedResponde, PaginationParams, ReturnService } from "@/types";
-import { Api } from "./config";
+import {
+	Follower,
+	FollowPayload,
+	PaginatedResponde,
+	PaginationParams,
+	ReturnService,
+} from '@/types'
+import { Api } from './config'
 
-export const GetFollowers = async (user_id: number, queryParams?: PaginationParams): ReturnService<PaginatedResponde<Follower>> => {
+export const GetFollowers = async (
+	user_id: number,
+	queryParams?: PaginationParams
+): ReturnService<PaginatedResponde<Follower>> => {
 	try {
 		const { data } = await Api(`/followers/${user_id}`, { params: queryParams })
 		return data
@@ -10,9 +19,14 @@ export const GetFollowers = async (user_id: number, queryParams?: PaginationPara
 	}
 }
 
-export const GetFollowing = async (user_id: number, queryParams?: PaginationParams): ReturnService<PaginatedResponde<Follower>> => {
+export const GetFollowing = async (
+	user_id: number,
+	queryParams?: PaginationParams
+): ReturnService<PaginatedResponde<Follower>> => {
 	try {
-		const { data } = await Api(`/followers/${user_id}/following`, { params: queryParams })
+		const { data } = await Api(`/followers/${user_id}/following`, {
+			params: queryParams,
+		})
 		return data
 	} catch {
 		return new Error()
@@ -34,7 +48,6 @@ export const Unfollow = async (body: FollowPayload): ReturnService<void> => {
 		return new Error()
 	}
 }
-
 
 export const FollowerServices = {
 	GetFollowers,

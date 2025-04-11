@@ -1,9 +1,8 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PostFeed } from "@/components/PostFeed";
-import { CreatePostModal } from "@/components/CreatePostModal";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { PostFeed } from '@/components/PostFeed'
+import { CreatePostModal } from '@/components/CreatePostModal'
 
 export default function Home() {
-
 	return (
 		<main className="max-w-xl mx-auto py-4 px-4 sm:px-0">
 			<div className="flex gap-4 overflow-x-auto pb-4 mb-4">
@@ -17,7 +16,9 @@ export default function Home() {
 								</Avatar>
 							</div>
 						</div>
-						<span className="text-xs mt-1 truncate w-16 text-center">user_{i}</span>
+						<span className="text-xs mt-1 truncate w-16 text-center">
+							user_{i}
+						</span>
 					</div>
 				))}
 			</div>
@@ -26,5 +27,5 @@ export default function Home() {
 			</div>
 			<PostFeed />
 		</main>
-	);
+	)
 }

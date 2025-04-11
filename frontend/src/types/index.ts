@@ -1,5 +1,5 @@
 export interface MetaPagination {
-	next_cursor: number,
+	next_cursor: number
 	total: number
 	page: number
 	per_page: number
@@ -60,8 +60,10 @@ export interface Follower {
 }
 
 export type SafeType<TObj = unknown> = {
-	[TKey in keyof TObj]?: TObj[TKey] extends object ? SafeType<TObj[TKey]> | null : TObj[TKey] | null;
-};
+	[TKey in keyof TObj]?: TObj[TKey] extends object
+		? SafeType<TObj[TKey]> | null
+		: TObj[TKey] | null
+}
 
 export interface PaginatedResponde<TData extends object> {
 	readonly data: SafeType<TData>[]
@@ -78,7 +80,6 @@ export type PaginationParams = {
 	per_page?: number
 }
 
-
 export type ReturnService<TData = unknown> = Promise<SafeType<TData> | Error>
 
 export type CreateUserPayload = {
@@ -89,10 +90,9 @@ export type CreateUserPayload = {
 	avatar_url?: string | null
 }
 
-
 export type CreatePostPayload = {
 	caption: string
-	image_url?: string | null,
+	image_url?: string | null
 	user_id: number
 }
 

@@ -1,17 +1,22 @@
-import { UserServices } from "@/services";
-import { SafeType, User } from "@/types";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { UserServices } from '@/services'
+import { SafeType, User } from '@/types'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 
 export function useUser(userId?: string) {
-	const { data, isLoading, isError, error: errorRq } = useQuery({
-		queryKey: ["user", userId],
+	const {
+		data,
+		isLoading,
+		isError,
+		error: errorRq,
+	} = useQuery({
+		queryKey: ['user', userId],
 		queryFn: () => UserServices.GetById(userId!),
-		enabled: !!userId
-	});
+		enabled: !!userId,
+	})
 
-	const [user, setUser] = useState<SafeType<User> | null>(null);
-	const [error, setError] = useState<string | null>(null);
+	const [user, setUser] = useState<SafeType<User> | null>(null)
+	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
 		if (!data && (isError || !!errorRq)) {
@@ -24,12 +29,12 @@ export function useUser(userId?: string) {
 			return
 		}
 
-		if (!!data && !(data instanceof Error))
-			setUser(data)
-
-	}, [data, errorRq, isError]);
+		if (!!data && !(data instanceof Error)) setUser(data)
+	}, [data, errorRq, isError])
 
 	return {
-		user, isLoading, error
+		user,
+		isLoading,
+		error,
 	} as const
 }

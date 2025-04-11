@@ -1,40 +1,40 @@
 'use client'
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-} from "@/components/ui/dialog";
-import { ImagePlus } from "lucide-react";
-import { usePosts } from "@/hooks/usePosts";
-import Image from "next/image";
+} from '@/components/ui/dialog'
+import { ImagePlus } from 'lucide-react'
+import { usePosts } from '@/hooks/usePosts'
+import Image from 'next/image'
 
 export function CreatePostModal() {
-	const [caption, setCaption] = useState("");
-	const [imagePreview, setImagePreview] = useState<string | null>(null);
-	const [open, setOpen] = useState(false);
-	const { createPost, createPostIsLoading } = usePosts();
-	const [currentUser] = useState({ id: 1 });
+	const [caption, setCaption] = useState('')
+	const [imagePreview, setImagePreview] = useState<string | null>(null)
+	const [open, setOpen] = useState(false)
+	const { createPost, createPostIsLoading } = usePosts()
+	const [currentUser] = useState({ id: 1 })
 
 	const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
+		const file = e.target.files?.[0]
 		if (file) {
-			const reader = new FileReader();
+			const reader = new FileReader()
 			reader.onload = (e) => {
-				setImagePreview(e.target?.result as string);
-			};
-			reader.readAsDataURL(file);
+				setImagePreview(e.target?.result as string)
+			}
+			reader.readAsDataURL(file)
 		}
-	};
+	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
+		e.preventDefault()
 
 		createPost(
 			{
@@ -44,13 +44,13 @@ export function CreatePostModal() {
 			},
 			{
 				onSuccess: () => {
-					setCaption("");
-					setImagePreview(null);
-					setOpen(false);
+					setCaption('')
+					setImagePreview(null)
+					setOpen(false)
 				},
 			}
-		);
-	};
+		)
+	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -104,7 +104,7 @@ export function CreatePostModal() {
 						onChange={(e) => setCaption(e.target.value)}
 						rows={3}
 						style={{
-							resize: "none",
+							resize: 'none',
 						}}
 					/>
 
@@ -113,11 +113,11 @@ export function CreatePostModal() {
 							type="submit"
 							disabled={createPostIsLoading || !caption.trim()}
 						>
-							{createPostIsLoading ? "Compartilhando..." : "Compartilhar"}
+							{createPostIsLoading ? 'Compartilhando...' : 'Compartilhar'}
 						</Button>
 					</div>
 				</form>
 			</DialogContent>
 		</Dialog>
-	);
+	)
 }
