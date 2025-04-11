@@ -191,10 +191,11 @@ DECLARE
 BEGIN
   FOR user_id_var IN 1..5 LOOP
     FOR i IN 1..100 LOOP
-      INSERT INTO posts(user_id, caption)
+      INSERT INTO posts(user_id, caption, image_url)
       VALUES (
         user_id_var,
-        'Este é o post ' || i || ' do usuário ' || user_id_var
+        'Este é o post ' || i || ' do usuário ' || user_id_var,
+        'https://picsum.photos/seed/' || user_id_var || '_' || i || '/300/300'
       );
     END LOOP;
   END LOOP;

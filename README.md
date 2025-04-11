@@ -58,6 +58,7 @@ Este projeto aplica os seguintes conceitos ensinados no curso:
 - **Next.js**
 - **React Query** para gerenciamento de cache e dados assíncronos
 - **Tailwind CSS** + **shadcn/ui** para estilização
+- **React Virtualized** para virtualização do feed
 
 ## Como Rodar o Projeto
 

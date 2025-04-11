@@ -67,9 +67,17 @@ export function useLikes(postId?: number) {
 				() => context?.previousPosts
 			)
 		},
-		onSettled: async () => {
+		onSettled: async (data, _e, _v, context) => {
+			if(data instanceof Error) {
+				await queryClient.cancelQueries({ queryKey: ['posts'] })
+				queryClient.setQueriesData(
+					{ queryKey: ['posts'] },
+					() => context?.previousPosts
+				)
+				return
+			}
+
 			await Promise.all([
-				queryClient.invalidateQueries({ queryKey: ['posts'], exact: false }),
 				queryClient.invalidateQueries({ queryKey: ['likes', postId] }),
 			])
 		},
@@ -90,7 +98,10 @@ export function useLikes(postId?: number) {
 		}
 	}, [likesData, isErrorLikes, errorLikes])
 
-	const isLiked = useMemo(() => likesList.some(l => l.user_id === 1), [likesList])
+	const isLiked = useMemo(
+		() => likesList.some((l) => l.user_id === 1),
+		[likesList]
+	)
 
 	return {
 		likes: likesList,

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useCallback } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import { usePosts } from '@/hooks/usePosts'
 import { PostCard } from './PostCard'
 import 'react-virtualized/styles.css'
@@ -10,9 +10,8 @@ import {
 	CellMeasurer,
 	CellMeasurerCache,
 	WindowScroller,
-	ListRowRenderer,
 } from 'react-virtualized'
-import { RenderedRows } from 'react-virtualized/dist/es/List'
+import { ListRowRenderer, RenderedRows } from 'react-virtualized/dist/es/List'
 
 export function PostFeed({ userId }: Readonly<{ userId?: number }>) {
 	const { posts, isLoadingPosts, fetchNextPosts, isFetchingPosts, postsMeta } =
@@ -24,6 +23,13 @@ export function PostFeed({ userId }: Readonly<{ userId?: number }>) {
 			defaultHeight: 500,
 		})
 	)
+
+	const listRef = useRef<List>(null)
+
+	useEffect(() => {
+		cache.current.clearAll()
+		listRef.current?.recomputeRowHeights()
+	}, [posts.length])
 
 	const rowRenderer: ListRowRenderer = useCallback(
 		({ index, key, parent }) => {
@@ -38,7 +44,11 @@ export function PostFeed({ userId }: Readonly<{ userId?: number }>) {
 					columnIndex={0}
 					rowIndex={index}
 				>
-					{({ registerChild }) => <PostCard post={post} ref={registerChild} />}
+					{({ registerChild }) => (
+						<div ref={registerChild} className="mb-6">
+							<PostCard post={post} ref={registerChild} />
+						</div>
+					)}
 				</CellMeasurer>
 			)
 		},
@@ -71,6 +81,7 @@ export function PostFeed({ userId }: Readonly<{ userId?: number }>) {
 				<AutoSizer disableHeight>
 					{({ width }) => (
 						<List
+							ref={listRef}
 							autoHeight
 							height={height}
 							width={width}

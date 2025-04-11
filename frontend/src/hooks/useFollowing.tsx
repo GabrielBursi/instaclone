@@ -111,7 +111,25 @@ export function useFollowing(userId?: number) {
 				context?.previousFollowerUserData
 			)
 		},
-		onSettled: async (_data, _err, variables) => {
+		onSettled: async (data, _err, variables, context) => {
+			if(data instanceof Error) {
+				await queryClient.cancelQueries({
+					queryKey: ['user', variables.following_id],
+				})
+				await queryClient.cancelQueries({
+					queryKey: ['user', variables.follower_id],
+				})
+				queryClient.setQueryData(
+					['user', variables.following_id],
+					context?.previousFollowingUserData
+				)
+				queryClient.setQueryData(
+					['user', variables.follower_id],
+					context?.previousFollowerUserData
+				)
+				return
+			}
+
 			await Promise.all([
 				queryClient.invalidateQueries({
 					queryKey: ['user', variables.following_id],
@@ -208,10 +226,13 @@ export function useFollowing(userId?: number) {
 		},
 	})
 
-	const isUserFollowingOther = useCallback((otherId: number) => {
-		const isFollowing = following.some(user => user?.id === otherId)
-		return isFollowing
-	}, [following])
+	const isUserFollowingOther = useCallback(
+		(otherId: number) => {
+			const isFollowing = following.some((user) => user?.id === otherId)
+			return isFollowing
+		},
+		[following]
+	)
 
 	return {
 		followers,

@@ -17,10 +17,18 @@ export default function ProfilePage() {
 	const { user, isLoading: userLoading } = useUser(Number(userId))
 	const { posts } = usePosts(Number(userId))
 	const [currentUser] = useState({ id: 1 })
-	const { followUser, unfollowUser, isUnfollowingUser, isFollowingUser, isUserFollowingOther } =
-		useFollowing(currentUser.id)
+	const {
+		followUser,
+		unfollowUser,
+		isUnfollowingUser,
+		isFollowingUser,
+		isUserFollowingOther,
+	} = useFollowing(currentUser.id)
 
-	const currentUserIsFollowing = useMemo(() => isUserFollowingOther(Number(params.id)), [isUserFollowingOther, params])
+	const currentUserIsFollowing = useMemo(
+		() => isUserFollowingOther(Number(params.id)),
+		[isUserFollowingOther, params]
+	)
 
 	const handleFollowToggle = () => {
 		if (!user?.id) return
@@ -36,7 +44,6 @@ export default function ProfilePage() {
 				following_id: parseFloat(userId),
 			})
 		}
-
 	}
 
 	if (userLoading || !user) {
